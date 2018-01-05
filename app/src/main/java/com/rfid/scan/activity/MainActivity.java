@@ -1,6 +1,5 @@
 package com.rfid.scan.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,15 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.rfid.scan.R;
 import com.rfid.scan.entity.BoxData;
 import com.rfid.scan.entity.BoxListData;
-import com.rfid.scan.entity.SetInfo;
+import com.rfid.scan.service.BoxDataUtil;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private android.support.v7.app.ActionBar mActionBar;
 
     private BoxListData mBoxListData = null;
-    private String mSetInfoPath = "";
+    private String mBoxRfid = "";
 
     private List<String> boxList = new ArrayList<String>();               //工具包列表
     ArrayAdapter<String> mBoxAdapter = null;
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             String path = "";
             for(BoxListData.BoxInfo boxInfo : mBoxListData.getBoxlist()){
                 if(desp.equalsIgnoreCase(boxInfo.getDesc())){
-                    mSetInfoPath = boxInfo.getPath();
+                    mBoxRfid = boxInfo.getRfid();
                     break;
                 }
             }
@@ -158,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initData(){
-        String text = readAssetsTxt(this,"boxlist.json");
-        mBoxListData = JSONObject.parseObject(text, BoxListData.class);
+
+        mBoxListData = BoxDataUtil.getInstance().getmBoxListData();
         for(BoxListData.BoxInfo boxInfo : mBoxListData.getBoxlist()){
             boxList.add(boxInfo.getDesc());
         }
@@ -168,18 +163,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void doChoose(){
-        if(mSetInfoPath.isEmpty()){
+        if(mBoxRfid == null){
+            Toast.makeText(this, "读取工具包数据异常，请联系管理员！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(mBoxRfid.isEmpty()){
             Toast.makeText(this, "请选择工具包...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //读取工具包数据
-        String text = readAssetsTxt(this,mSetInfoPath);
-        BoxData boxData= JSONObject.parseObject(text, BoxData.class);
-
         Intent intent=new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("boxData",boxData);
+        bundle.putSerializable("boxRfid",mBoxRfid);
         intent.putExtras(bundle);
 
         switch (mCurrentPosition) {
@@ -211,29 +207,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         startActivity(intent);
-    }
-    /**
-     * 读取assets下的txt文件，返回utf-8 String
-     * @param context
-     * @param fileName 不包括后缀
-     * @return
-     */
-    public static String readAssetsTxt(Context context, String fileName){
-        try {
-            InputStreamReader inputStreamReader=new InputStreamReader(context.getAssets().open(fileName),"UTF-8");
-            BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
-            String line;
-            StringBuilder stringBuilder=new StringBuilder();
-            while ((line=bufferedReader.readLine())!=null){
-                stringBuilder.append(line);
-            }
-            bufferedReader.close();
-            inputStreamReader.close();
-
-            return stringBuilder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 }

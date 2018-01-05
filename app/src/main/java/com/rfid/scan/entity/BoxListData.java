@@ -28,6 +28,7 @@ public class BoxListData {
     public static class BoxInfo {
         private String desc;
         private String path;
+        private String rfid;
 
         public String getDesc() {
             return desc;
@@ -45,11 +46,20 @@ public class BoxListData {
             this.path = path;
         }
 
+        public String getRfid() {
+            return rfid;
+        }
+
+        public void setRfid(String rfid) {
+            this.rfid = rfid;
+        }
+
         @Override
         public String toString() {
             return "BoxInfo{" +
                     "desc='" + desc + '\'' +
                     ", path='" + path + '\'' +
+                    ", rfid='" + rfid + '\'' +
                     '}';
         }
     }

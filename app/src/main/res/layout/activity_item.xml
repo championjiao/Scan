@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="170dp"
+    android:layout_height="100dp"
     android:orientation="horizontal"
-    android:background="#FFF2F2F2" >
+    android:background="@drawable/view_boder" >
 
-    <ImageView
-        android:id="@+id/img_epc"
-        android:layout_margin="6dp"
-        android:layout_width="80sp"
-        android:layout_height="80sp"
-        app:srcCompat="@drawable/ic_launcher" />
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="90sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/txtTip_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:gravity="left"
+            android:padding="1sp"
+            android:text="21211212121121"
+            android:textSize="8sp"
+            android:textColor="@color/colorblack" />
+        <ImageView
+            android:id="@+id/img_epc"
+            android:layout_margin="2dp"
+            android:layout_width="75sp"
+            android:layout_height="75sp"
+            app:srcCompat="@drawable/ic_launcher" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="5dp"
@@ -19,34 +35,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
         <TextView
-            android:id="@+id/txtTip_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:gravity="left"
-            android:padding="3sp"
-            android:text=""
-            android:textColor="#ff333333"
-            android:textSize="15sp" />
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:text="Correct"
+            android:textAlignment="center" />
         <TextView
-            android:id="@+id/txtTip_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:gravity="left"
-            android:padding="3sp"
-            android:text=""
-            android:textColor="#ff333333"
-            android:textSize="15sp" />
+            android:layout_marginLeft="2dp"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:background="@color/text_green1"
+            android:id="@+id/txtTip_correct"
+            android:text="0"
+            android:textAlignment="center" />
         <TextView
-            android:id="@+id/txtTip_expriedtag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:gravity="left"
-            android:padding="3sp"
-            android:text=""
-            android:textColor="#ff333333"
-            android:textSize="15sp" />
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:text="Missing"
+            android:textAlignment="center" />
+        <TextView
+            android:layout_marginLeft="2dp"
+            android:layout_width="65dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:background="@color/colorred"
+            android:id="@+id/txtTip_miss"
+            android:text="0"
+            android:textAlignment="center" />
     </LinearLayout>
 </LinearLayout>

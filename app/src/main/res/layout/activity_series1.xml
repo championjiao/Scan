@@ -3,9 +3,126 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.rfid.scan.activity.SeriesActivity" >
-    <ListView
-        android:id="@+id/list_view"
+    <LinearLayout
+        android:id="@+id/line_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pack : "
+            android:textColor="@color/colorblack"
+            android:textAlignment="textEnd" />
+        <TextView
+            android:id="@+id/text_boxName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorblack"
+            android:text="工具包名" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/line_tip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/line_title"
+        android:background="@color/colorgray"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorblack"
+            android:text="Pack : "/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/line_tools"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/line_tip"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/view_boder"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:text="Total"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:background="@color/text_green"
+                android:text="0"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/view_boder"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:text="Missing"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_width="80dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:background="@color/colorred"
+                android:text="0"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="90dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/button_boder"
+            android:text="Reset"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:numColumns="2"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
+        android:layout_below="@+id/line_tools">
+    </GridView>
 </RelativeLayout>

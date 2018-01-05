@@ -4,5 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="text_green">#c9e661</color>
-    <color name="text_green1">#9ec222</color>
+    <color name="text_green1">#90c321</color>
+    <color name="colorgray">#b6b6b6</color>
+    <color name="colorred">#e60215</color>
+    <color name="colorblack">#020202</color>
+    <color name="colorwhite">#ffffff</color>
 </resources>

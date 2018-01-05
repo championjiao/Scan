@@ -3,12 +3,9 @@ package com.rfid.scan.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.rfid.scan.R;
@@ -19,17 +16,20 @@ import com.rfid.scan.series.model.ResponseHandler;
 import com.rfid.scan.series.operation.U8Series;
 import com.rfid.scan.series.reader.model.InventoryBuffer;
 import com.rfid.scan.series.reader.server.ReaderHelper;
+import com.rfid.scan.service.BoxDataUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SeriesActivity extends AppCompatActivity {
 
-    private ListView mListView;
+    private GridView mGridView;
     private BoxData mBoxData;
     private SeriesAdapter seriesAdapter;
+    private Map<String,SeriesAdapter.setInfoEx> mList = new HashMap<String,SeriesAdapter.setInfoEx>();
 
     public static boolean isInventory;
     private U8Series mUSeries;
@@ -37,13 +37,14 @@ public class SeriesActivity extends AppCompatActivity {
     private static Context context;
     private ReaderHelper mReaderHelper;
     private static InventoryBuffer m_curInventoryBuffer;
+    private Map<String, SetInfo.RFIDInfoEx> mRfidMap = new HashMap<String, SetInfo.RFIDInfoEx>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series1);
 
-        mListView = (ListView)findViewById(R.id.list_view);
+        mGridView = (GridView)findViewById(R.id.grid_view);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,10 +55,30 @@ public class SeriesActivity extends AppCompatActivity {
         mUSeries = U8Series.getInstance();
 
         //上层传递过来的数据
-        mBoxData = (BoxData)getIntent().getSerializableExtra("boxData");
+        String boxRfid = (String)getIntent().getSerializableExtra("boxRfid");
 
-        seriesAdapter = new SeriesAdapter(this, mBoxData.getSetInfo().getInstruments());
-        mListView.setAdapter(seriesAdapter);
+        //读取工具包数据
+        mBoxData= (BoxData) BoxDataUtil.getInstance().getmBoxMap().get(boxRfid);
+
+        //数据需要处理一下
+        //找到code一样的
+        for(SetInfo.RFIDInfoEx infoEx:mBoxData.getSetInfo().getInstruments()){
+            String code = infoEx.getCode();
+            SeriesAdapter.setInfoEx setinfo = mList.get(code);
+            if(setinfo != null){
+                setinfo.getRfids().add(infoEx.getRFID());
+            }
+            else{
+                setinfo = new SeriesAdapter.setInfoEx();
+                setinfo.setCode(code);
+                setinfo.getRfids().add(infoEx.getRFID());
+                setinfo.setImgPath(infoEx.getImg());
+                mList.put(code,setinfo);
+            }
+        }
+
+        seriesAdapter = new SeriesAdapter(this,mList);
+        mGridView.setAdapter(seriesAdapter);
 
         mHandler = new Handler();
         try {
@@ -128,9 +149,12 @@ public class SeriesActivity extends AppCompatActivity {
                     List<InventoryBuffer.InventoryTagMap> inventoryTagData = new ArrayList<InventoryBuffer.InventoryTagMap>();
                     inventoryTagData.addAll((Collection<? extends InventoryBuffer.InventoryTagMap>) data);
 
-                    //epc对应起来
-                    //RFID  ====  map.strEPC
-                    //匹配到对应的位 刷新
+                    for(InventoryBuffer.InventoryTagMap map:inventoryTagData){
+                        SeriesAdapter.setInfoEx setinfo = mList.get(map.strCRC);
+                        if(setinfo != null){
+                            setinfo.getCorrentRfids().add(map.strEPC);
+                        }
+                    }
                     seriesAdapter.notifyDataSetChanged();
                 } else {
                     System.out.println("盘询成功,返回标识异常");

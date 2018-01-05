@@ -1,51 +1,198 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingTop="70.0dip"
-    android:background="#FFF2F2F2" >
-
-    <include layout="@layout/activity_item"/>
-
-    <TextView
-        android:id="@+id/txtTip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:layout_marginLeft="15dp"
-        android:padding="2sp"
-        android:text="是否要替换："
-        android:textColor="#ff333333"
-        android:textSize="25sp" />
-
-    <include layout="@layout/activity_item"/>
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.rfid.scan.activity.SeriesActivity" >
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/line_title"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20.0dip"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal" >
-        <Button
-            android:id="@+id/bt_cancle"
-            android:layout_marginLeft="30dp"
-            android:layout_width="75dp"
-            android:layout_height="30dp"
-            android:background="@drawable/button_selector"
-            android:text="取消"
-            android:textColor="@color/button_color" />
-        <Button
-            android:id="@+id/bt_ok"
-            android:layout_marginLeft="30dp"
-            android:layout_width="150dp"
-            android:layout_height="30dp"
-            android:background="@drawable/button_selector"
-            android:text="确定替换"
-            android:textColor="@color/button_color" />
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pack : "
+            android:textColor="@color/colorblack"
+            android:textAlignment="textEnd" />
+        <TextView
+            android:id="@+id/text_boxName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorblack"
+            android:text="" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/line_tip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/line_title"
+        android:background="@color/colorgray"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/text_statues"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorblack"
+            android:text=""/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/line_tools"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/line_tip"
+        android:orientation="horizontal" >
 
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_width="100dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rfid_boder"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Instruments Picture"
+                android:textSize="10dp"
+                android:textColor="@color/colorwhite" />
+
+            <ImageView
+                android:id="@+id/img_epc"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="5dp"
+                android:background="@color/colorwhite"
+                app:srcCompat="@mipmap/ic_launcher" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="2dp"
+            android:layout_width="100dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="75dp"
+                android:layout_marginTop="2dp"
+                android:textSize="10dp"
+                android:background="@drawable/button_boder"
+                android:text="Start" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="5dp"
+                android:textSize="10dp"
+                android:background="@drawable/button_boder"
+                android:text="Change" />
+
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/rfid_boder"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="10dp"
+                    android:text="Instruments Description"
+                    android:textColor="@color/colorwhite" />
+                <TextView
+                    android:id="@+id/text_code"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:textSize="10dp"
+                    android:text=""
+                    android:textColor="@color/colorblack"
+                    android:background="@color/colorwhite" />
+                <TextView
+                    android:id="@+id/text_codep"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:textSize="10dp"
+                    android:text=""
+                    android:textColor="@color/colorblack"
+                    android:background="@color/colorwhite" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rfid_boder"
+        android:orientation="vertical"
+        android:layout_below="@+id/line_tools">
+        <LinearLayout
+            android:id="@+id/main_linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tab_index1"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:layout_margin="2dp"
+                android:text="Instruments Status"
+                android:textColor="@color/colorwhite"
+                android:textSize="10sp" />
 
-
-</LinearLayout>
+            <TextView
+                android:id="@+id/tab_index2"
+                android:layout_width="fill_parent"
+                android:layout_height="20dp"
+                android:layout_weight="1.0"
+                android:layout_margin="2dp"
+                android:background="@drawable/textview_selector"
+                android:gravity="center"
+                android:text="Instruments Information"
+                android:textColor="@color/colorwhite"
+                android:textSize="10sp" />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/list_info"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="2dp"
+            android:background="@color/colorwhite"/>
+    </LinearLayout>
+</RelativeLayout>

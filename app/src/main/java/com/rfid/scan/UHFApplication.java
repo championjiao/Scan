@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 
 import com.rfid.scan.series.reader.server.ReaderHelper;
 import com.rfid.scan.series.utils.MusicPlayer;
+import com.rfid.scan.service.BoxDataUtil;
 
 
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class UHFApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //初始化工具包数据
+        BoxDataUtil.getInstance().initData(applicationContext);
     }
 
 

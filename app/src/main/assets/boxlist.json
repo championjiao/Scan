@@ -2,27 +2,33 @@
   "boxlist":[
       {
         "desc":"工具包1",
-        "path":"box1.json"
+        "path":"box1.json",
+        "rfid":"1234"
       },
       {
         "desc":"工具包2",
-        "path":"box2.json"
+        "path":"box2.json",
+        "rfid":"1234"
       },
       {
         "desc":"工具包3",
-        "path":"box3.json"
+        "path":"box3.json",
+        "rfid":"1234"
       },
       {
         "desc":"工具包4",
-        "path":"box4.json"
+        "path":"box4.json",
+        "rfid":"1234"
       },
       {
         "desc":"工具包5",
-        "path":"box5.json"
+        "path":"box5.json",
+        "rfid":"1234"
       },
       {
         "desc":"工具包6",
-        "path":"box6.json"
+        "path":"box6.json",
+        "rfid":"1234"
       }
     ]
 }
