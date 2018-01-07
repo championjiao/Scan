@@ -3,32 +3,32 @@
       {
         "desc":"工具包1",
         "path":"box1.json",
-        "rfid":"1234"
+        "rfid":"12345"
       },
       {
         "desc":"工具包2",
         "path":"box2.json",
-        "rfid":"1234"
+        "rfid":"12346"
       },
       {
         "desc":"工具包3",
         "path":"box3.json",
-        "rfid":"1234"
+        "rfid":"12347"
       },
       {
         "desc":"工具包4",
         "path":"box4.json",
-        "rfid":"1234"
+        "rfid":"12348"
       },
       {
         "desc":"工具包5",
         "path":"box5.json",
-        "rfid":"1234"
+        "rfid":"12349"
       },
       {
         "desc":"工具包6",
         "path":"box6.json",
-        "rfid":"1234"
+        "rfid":"12341"
       }
     ]
 }

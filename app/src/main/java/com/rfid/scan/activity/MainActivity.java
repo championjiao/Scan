@@ -16,12 +16,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rfid.scan.R;
-import com.rfid.scan.entity.BoxData;
 import com.rfid.scan.entity.BoxListData;
 import com.rfid.scan.service.BoxDataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.rfid.scan.UHFApplication.OP_Type_Change;
+import static com.rfid.scan.UHFApplication.OP_Type_Recognize;
+import static com.rfid.scan.UHFApplication.OP_Type_Search;
+import static com.rfid.scan.UHFApplication.OP_Type_Series;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BoxListData mBoxListData = null;
     private String mBoxRfid = "";
+    private String mBoxDesp = "";
 
     private List<String> boxList = new ArrayList<String>();               //工具包列表
     ArrayAdapter<String> mBoxAdapter = null;
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             for(BoxListData.BoxInfo boxInfo : mBoxListData.getBoxlist()){
                 if(desp.equalsIgnoreCase(boxInfo.getDesc())){
                     mBoxRfid = boxInfo.getRfid();
+                    mBoxDesp = desp;
                     break;
                 }
             }
@@ -143,8 +149,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-//                Toast.makeText(this, "你点击了“用户”按键！", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(MainActivity.this,SearchActivity.class);
+                //跳转到识别
+                Intent intent=new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("opType",OP_Type_Recognize);
+                intent.putExtras(bundle);
+                intent.setClass(MainActivity.this, ToolInfoActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -160,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
         }
         mBoxAdapter = new ArrayAdapter<>(this, cn.fuen.xmldemo.R.layout.spinner_item, boxList);
         mSpinnerBox.setAdapter(mBoxAdapter);
+
+        mBoxRfid = mBoxListData.getBoxlist().get(0).getRfid();
+        mBoxDesp = mBoxListData.getBoxlist().get(0).getDesc();
     }
 
     public void doChoose(){
@@ -175,37 +188,44 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent=new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("boxRfid",mBoxRfid);
-        intent.putExtras(bundle);
+        bundle.putString("boxRfid",mBoxRfid);
+        bundle.putString("boxDesp",mBoxDesp);
 
         switch (mCurrentPosition) {
             case 0:
                 intent.setClass(MainActivity.this, SeriesActivity.class);
                 break;
             case 1:
-                intent.setClass(MainActivity.this, SearchActivity.class);
+                bundle.putString("opType",OP_Type_Search);
+                intent.setClass(MainActivity.this, ToolsActivity.class);
                 break;
-            case 2:
-                intent.setClass(MainActivity.this, ReplaceActivity.class);
+            case 2://c
+                bundle.putString("opType",OP_Type_Change);
+                intent.setClass(MainActivity.this, ToolsActivity.class);
                 break;
         }
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void doAuto(){
-
         Intent intent=new Intent();
+        Bundle bundle = new Bundle();
         switch (mCurrentPosition) {
             case 0:
-                intent.setClass(MainActivity.this, SeriesActivity.class);
+                bundle.putString("opType",OP_Type_Series);
+                intent.setClass(MainActivity.this, AutoActivity.class);
                 break;
             case 1:
-                intent.setClass(MainActivity.this, SearchActivity.class);
+                bundle.putString("opType",OP_Type_Search);
+                intent.setClass(MainActivity.this, AutoActivity.class);
                 break;
             case 2:
-                intent.setClass(MainActivity.this, ReplaceActivity.class);
+                bundle.putString("opType",OP_Type_Change);
+                intent.setClass(MainActivity.this, AutoActivity.class);
                 break;
         }
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

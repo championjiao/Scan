@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="170dp"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/view_boder" >
 
@@ -18,7 +18,9 @@
             android:layout_marginLeft="2dp"
             android:gravity="left"
             android:padding="1sp"
-            android:text="21211212121121"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text=""
             android:textSize="8sp"
             android:textColor="@color/colorblack" />
         <ImageView
@@ -36,34 +38,34 @@
         android:orientation="vertical" >
         <TextView
             android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:layout_width="65dp"
-            android:layout_height="20dp"
-            android:padding="2dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
             android:text="Correct"
             android:textAlignment="center" />
         <TextView
             android:layout_marginLeft="2dp"
             android:layout_width="65dp"
-            android:layout_height="20dp"
-            android:padding="2dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
             android:background="@color/text_green1"
             android:id="@+id/txtTip_correct"
             android:text="0"
             android:textAlignment="center" />
         <TextView
             android:layout_marginLeft="2dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:layout_width="65dp"
-            android:layout_height="20dp"
-            android:padding="2dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
             android:text="Missing"
             android:textAlignment="center" />
         <TextView
             android:layout_marginLeft="2dp"
             android:layout_width="65dp"
-            android:layout_height="20dp"
-            android:padding="2dp"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
             android:background="@color/colorred"
             android:id="@+id/txtTip_miss"
             android:text="0"

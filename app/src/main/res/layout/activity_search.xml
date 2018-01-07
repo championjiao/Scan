@@ -11,48 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/txtTip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginLeft="15dp"
-            android:padding="2sp"
-            android:text="查找工具为："
-            android:textColor="#ff333333"
-            android:textSize="25sp" />
 
-        <include layout="@layout/activity_item"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal" >
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="80sp"
-                android:layout_marginLeft="90dp"
-                android:layout_marginRight="90dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_launcher" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/bt_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="90dp"
-                android:layout_marginRight="90dp"
-                android:layout_weight="0.22"
-                android:text="找到" />
-        </LinearLayout>
     </LinearLayout>
 
     <com.wang.avi.AVLoadingIndicatorView

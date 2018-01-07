@@ -19,7 +19,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:paddingTop="70.0dip">
+            android:paddingTop="50.0dip">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"

@@ -31,7 +31,7 @@ public class BoxDataUtil {
     //存储工具箱索引数据
     private BoxListData mBoxListData = null;
     //所有的rfid 及其对象
-    private Map<String, Object> mRfidMap = new HashMap<String, Object>();
+    private Map<String, SetInfo.RFIDInfoEx> mRfidMap = new HashMap<String, SetInfo.RFIDInfoEx>();
     //所有工具包的rfid 及其对象
     private Map<String, Object> mBoxMap = new HashMap<String, Object>();
 
@@ -80,7 +80,7 @@ public class BoxDataUtil {
         return mBoxListData;
     }
 
-    public Map<String, Object> getmRfidMap() {
+    public Map<String, SetInfo.RFIDInfoEx> getmRfidMap() {
         return mRfidMap;
     }
 

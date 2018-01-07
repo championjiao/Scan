@@ -1,6 +1,7 @@
 package com.rfid.scan.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rfid.scan.R;
-import com.rfid.scan.entity.SetInfo.RFIDInfoEx;
-import com.rfid.scan.series.reader.model.InventoryBuffer;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +21,21 @@ public class SeriesAdapter extends BaseAdapter{
 	private Context context;
 
 	private Map<String,setInfoEx> list = null;
+	private List<String> listWap = new ArrayList<String>();
+
+	private int clickTemp = -1;
+	public void setSeclection(int position) {
+		clickTemp = position;
+	}
 
 	public SeriesAdapter(Context context, Map<String,setInfoEx> list){
 		this.context = context;
 		this.layoutInflater = LayoutInflater.from(context);
 		this.list = list;
+		listWap.clear();
+		for (Map.Entry<String, setInfoEx> entry : list.entrySet()) {
+			listWap.add(entry.getKey());
+		}
 	}
 	
 	public final class ListItemView{                //自定义控件集合     
@@ -34,13 +43,16 @@ public class SeriesAdapter extends BaseAdapter{
 		public ImageView mImgEpc;
 		public TextView mTextCorrentNum;
 		public TextView mTextMissNum;
-
     }
 
-	
+    public setInfoEx getContent(int position){
+		String key = listWap.get(position);
+		return list.get(key);
+	}
+
 	@Override
 	public int getCount() {
-		return list.size();
+		return listWap.size();
 	}
 
 	@Override
@@ -66,33 +78,38 @@ public class SeriesAdapter extends BaseAdapter{
 			listItemView.mTextCorrentNum = (TextView)layout.findViewById(R.id.txtTip_correct);
 			listItemView.mTextMissNum = (TextView)layout.findViewById(R.id.txtTip_miss);
 
-
 			layout.setTag(listItemView);
 		}else{
 			listItemView = (ListItemView) layout.getTag();
 		}
 
-		setInfoEx rfidInfoEx = list.get(position);
+		String key = listWap.get(position);
+		setInfoEx rfidInfoEx = list.get(key);
 		/*if(map.strEPC.equals("30000002") || map.strEPC.equals("300833B2DDD9014000000000")){
 			System.out.println("遇到有问题的标签");
 		}*/
 
 		listItemView.mTextInfo.setText(rfidInfoEx.getCode());
-		listItemView.mTextCorrentNum.setText(rfidInfoEx.getCorrent());
-		listItemView.mTextMissNum.setText(rfidInfoEx.getMissing());
+		listItemView.mTextCorrentNum.setText(String.valueOf(rfidInfoEx.getCorrentRfids().size()));
+		listItemView.mTextMissNum.setText(String.valueOf(rfidInfoEx.getRfids().size()));
 		listItemView.mImgEpc.setImageResource(R.drawable.ic_home_black_24dp);
+
+		if (clickTemp == position) {
+			layout.setBackgroundResource(R.drawable.grid_view_backgroud);
+		} else {
+			layout.setBackgroundResource(R.drawable.view_boder);
+		}
+
 		return layout;
 	}
 
 
 	public static class setInfoEx implements Serializable {
 
-		private List<String> correntRfids;
-		private List<String> rfids;
+		private List<String> correntRfids = new ArrayList<String>();
+		private List<String> rfids = new ArrayList<String>();
 		private String Code;
 		private String ImgPath;
-		private int Corrent;
-		private int Missing;
 
 		public List<String> getRfids() {
 			return rfids;
@@ -118,21 +135,6 @@ public class SeriesAdapter extends BaseAdapter{
 			ImgPath = imgPath;
 		}
 
-		public int getCorrent() {
-			return Corrent;
-		}
-
-		public void setCorrent(int corrent) {
-			Corrent = corrent;
-		}
-
-		public int getMissing() {
-			return Missing;
-		}
-
-		public void setMissing(int missing) {
-			Missing = missing;
-		}
 
 		public List<String> getCorrentRfids() {
 			return correntRfids;
@@ -149,8 +151,6 @@ public class SeriesAdapter extends BaseAdapter{
 					", rfids=" + rfids +
 					", Code='" + Code + '\'' +
 					", ImgPath='" + ImgPath + '\'' +
-					", Corrent=" + Corrent +
-					", Missing=" + Missing +
 					'}';
 		}
 	}

@@ -19,6 +19,11 @@ public class UHFApplication extends Application {
     public static Context applicationContext;
     private List<Activity> activities = new ArrayList<Activity>();
 
+    public static final String OP_Type_Series = "0";
+    public static final String OP_Type_Search = "1";
+    public static final String OP_Type_Recognize = "2";
+    public static final String OP_Type_Change = "3";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,6 +37,8 @@ public class UHFApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        MyU8Series.getInstance().initFist(applicationContext);
 
         //初始化工具包数据
         BoxDataUtil.getInstance().initData(applicationContext);
@@ -53,6 +60,7 @@ public class UHFApplication extends Application {
             }
         }
 
+        MyU8Series.getInstance().onDestroy();
         if (BluetoothAdapter.getDefaultAdapter() != null)
             BluetoothAdapter.getDefaultAdapter().disable();
         System.exit(0);

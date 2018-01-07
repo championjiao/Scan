@@ -24,7 +24,9 @@ public class SearchActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         actionBar.setTitle(R.string.action_search);
-        stopAnim();
+        startAnim();
+
+        //stopAnim();
     }
 
     @Override
@@ -37,6 +39,8 @@ public class SearchActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //kaishi
     void startAnim(){
         mAvi.show();
         mLinearContent.setVisibility(View.GONE);
