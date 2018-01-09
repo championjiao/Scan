@@ -24,6 +24,21 @@
     <string name="str_tools">工具列表</string>
     <string name="str_toolInfo">工具详情</string>
 
+
+    <string name="toolinfo_info">Instruments Information</string>
+    <string name="toolinfo_status">Instruments Status</string>
+    <string name="toolinfo_des">Instruments Description</string>
+    <string name="toolinfo_pic">Instruments Picture</string>
+    <string name="toolinfo_pack">Pack : </string>
+    <string name="toolinfo_replace">替换</string>
+    <string name="toolinfo_start">开始</string>
+    <string name="series_boxname">工具包名</string>
+    <string name="series_total">Total</string>
+    <string name="series_missing">Missing</string>
+    <string name="series_reset">Reset</string>
+    <string name="series_count">0</string>
+
+
     <string name="title_home">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="main_inventory">盘询</string>

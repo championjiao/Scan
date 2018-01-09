@@ -11,10 +11,10 @@
         android:orientation="horizontal" >
         <TextView
             android:id="@+id/textView"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pack : "
+            android:text="@string/toolinfo_pack"
             android:textColor="@color/colorblack"
             android:textAlignment="textEnd" />
         <TextView
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorblack"
-            android:text="工具包名" />
+            android:text="@string/series_boxname" />
     </LinearLayout>
     <GridView
         android:id="@+id/grid_view"
