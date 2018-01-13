@@ -40,9 +40,9 @@
             android:textColor="@color/colorblack" />
         <ImageView
             android:id="@+id/img_epc"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_launcher" />
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/txtTip_count"
             android:layout_width="fill_parent"

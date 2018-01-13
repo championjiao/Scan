@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,7 @@ public class AutoActivity extends AppCompatActivity {
         mBoxListData = BoxDataUtil.getInstance().getmBoxListData();
 
         for(BoxListData.BoxInfo boxInfo : mBoxListData.getBoxlist()){
-            mMapList.put(boxInfo.getRfid(),boxInfo);
+            mMapList.put(boxInfo.getRFID(),boxInfo);
         }
 
         Bundle bundle = getIntent().getExtras();
@@ -91,15 +92,15 @@ public class AutoActivity extends AppCompatActivity {
 
                     for(InventoryBuffer.InventoryTagMap map:inventoryTagData){
                         //匹配到设备
-                        //BoxListData.BoxInfo boxInfo = mMapList.get(map.strEPC);
-                        BoxListData.BoxInfo boxInfo = mMapList.get("12341");
+                        String strEPC = map.strEPC.replace(" ","");
+                        BoxListData.BoxInfo boxInfo = mMapList.get(strEPC);
                         if(boxInfo != null){
                             stopInventory();
 
                             Intent intent=new Intent();
                             Bundle bundle = new Bundle();
-                            bundle.putString("boxRfid",boxInfo.getRfid());
-                            bundle.putString("boxDesp",boxInfo.getDesc());
+                            bundle.putString("boxRfid",boxInfo.getRFID());
+                            bundle.putString("boxDesp",boxInfo.getCode());
                             //跳转
                             if(mFlag.equalsIgnoreCase(OP_Type_Series)){
                                 intent.setClass(AutoActivity.this, SeriesActivity.class);

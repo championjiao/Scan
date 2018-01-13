@@ -8,8 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.rfid.scan.R;
+import com.rfid.scan.service.BoxDataUtil;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +22,12 @@ import java.util.Map;
 public class ToolsAdapter extends BaseAdapter{
 
 	private LayoutInflater layoutInflater;
-	private Context context;
+	private Context mContext;
 
 	private List<ToolInfo> list = new ArrayList<ToolInfo>();
 
 	public ToolsAdapter(Context context, List<ToolInfo> list){
-		this.context = context;
+		this.mContext = context;
 		this.layoutInflater = LayoutInflater.from(context);
 		this.list = list;
 	}
@@ -75,8 +79,15 @@ public class ToolsAdapter extends BaseAdapter{
 
 		listItemView.mTextCode.setText(info.getCode());
 		listItemView.mTextCodeP.setText(info.getCodeP());
-		listItemView.mImgEpc.setImageResource(R.drawable.ic_home_black_24dp);
         listItemView.mTextCount.setText(String.valueOf(info.getRfids().size()));
+
+		String filePath = BoxDataUtil.getInstance().getDiskDir()+info.getImgPath();
+		File file = new File(filePath);
+		Glide.with(mContext).
+				load(file).
+				asBitmap().
+				diskCacheStrategy(DiskCacheStrategy.RESULT).//保存最终图片
+				into(listItemView.mImgEpc);
 
 		return layout;
 	}

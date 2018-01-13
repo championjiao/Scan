@@ -1,7 +1,6 @@
 package com.rfid.scan.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +8,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.rfid.scan.R;
+import com.rfid.scan.service.BoxDataUtil;
+
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SeriesAdapter extends BaseAdapter{
 
 	private LayoutInflater layoutInflater;
-	private Context context;
+	private Context mContext;
 
 	private Map<String,setInfoEx> list = null;
 	private List<String> listWap = new ArrayList<String>();
@@ -29,7 +35,7 @@ public class SeriesAdapter extends BaseAdapter{
 	}
 
 	public SeriesAdapter(Context context, Map<String,setInfoEx> list){
-		this.context = context;
+		this.mContext = context;
 		this.layoutInflater = LayoutInflater.from(context);
 		this.list = list;
 		listWap.clear();
@@ -89,11 +95,21 @@ public class SeriesAdapter extends BaseAdapter{
 			System.out.println("遇到有问题的标签");
 		}*/
 
+		if(rfidInfoEx.isValidate()){
+			listItemView.mTextCorrentNum.setBackgroundColor(mContext.getResources().getColor(R.color.text_green1));
+		}else{
+			listItemView.mTextCorrentNum.setBackgroundColor(mContext.getResources().getColor(R.color.text_yellow));
+		}
 		listItemView.mTextInfo.setText(rfidInfoEx.getCode());
 		listItemView.mTextCorrentNum.setText(String.valueOf(rfidInfoEx.getCorrentRfids().size()));
-		listItemView.mTextMissNum.setText(String.valueOf(rfidInfoEx.getRfids().size()));
-		listItemView.mImgEpc.setImageResource(R.drawable.ic_home_black_24dp);
-
+		listItemView.mTextMissNum.setText(String.valueOf(rfidInfoEx.getRfids().size()-rfidInfoEx.getCorrentRfids().size()));
+		String filePath = BoxDataUtil.getInstance().getDiskDir()+rfidInfoEx.getImgPath();
+		File file = new File(filePath);
+		Glide.with(mContext).
+				load(file).
+				asBitmap().
+				diskCacheStrategy(DiskCacheStrategy.RESULT).//保存最终图片
+				into(listItemView.mImgEpc);
 		if (clickTemp == position) {
 			layout.setBackgroundResource(R.drawable.grid_view_backgroud);
 		} else {
@@ -106,11 +122,11 @@ public class SeriesAdapter extends BaseAdapter{
 
 	public static class setInfoEx implements Serializable {
 
-		private List<String> correntRfids = new ArrayList<String>();
+		private Set<String> correntRfids = new HashSet<String>();
 		private List<String> rfids = new ArrayList<String>();
 		private String Code;
 		private String ImgPath;
-
+		private boolean isValidate;
 		public List<String> getRfids() {
 			return rfids;
 		}
@@ -136,12 +152,20 @@ public class SeriesAdapter extends BaseAdapter{
 		}
 
 
-		public List<String> getCorrentRfids() {
+		public Set<String> getCorrentRfids() {
 			return correntRfids;
 		}
 
-		public void setCorrentRfids(List<String> correntRfids) {
+		public void setCorrentRfids(Set<String> correntRfids) {
 			this.correntRfids = correntRfids;
+		}
+
+		public boolean isValidate() {
+			return isValidate;
+		}
+
+		public void setValidate(boolean validate) {
+			isValidate = validate;
 		}
 
 		@Override

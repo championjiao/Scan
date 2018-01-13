@@ -21,8 +21,13 @@
 
     <string name="action_scan">扫描</string>
 
+
     <string name="str_tools">工具列表</string>
     <string name="str_toolInfo">工具详情</string>
+
+    <string name="str_toolInfo_replace">工具替换</string>
+    <string name="str_toolInfo_search">工具查找</string>
+    <string name="str_toolInfo_recognize">工具识别</string>
 
 
     <string name="toolinfo_info">Instruments Information</string>

@@ -68,6 +68,8 @@ public class MyU8Series {
 			@Override
 			public void onSuccess(String msg, Object data, byte[] parameters) {
 				super.onSuccess(msg, data, parameters);
+				if(!isInventory())
+					return;
 				responseHandler.onSuccess(msg, data, parameters);
 			}
 		});

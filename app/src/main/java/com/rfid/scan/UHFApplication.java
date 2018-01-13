@@ -28,8 +28,8 @@ public class UHFApplication extends Application {
     public void onCreate() {
         super.onCreate();
         applicationContext=getApplicationContext();
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(applicationContext);
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        crashHandler.init(applicationContext);
         MusicPlayer.getInstance();
         try {
             //实例化ReaderHelper并setContext

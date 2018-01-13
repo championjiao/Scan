@@ -27,35 +27,44 @@ public class SetInfo implements Serializable {
     }
 
     public static class RFIDInfoEx implements Serializable{
-
-        private String id;
+        private String i_id;
         private String RFID;
         private String Code;
         private String Sort;
         private String Code_P;
+        private String ImgPath;
         private String Img;
         private String Count;
         private String CheckIn;
         private String OutStock;
         private String Stock;
-        private String CheckOut;
-        private String Sterilization;
-        private String Package;
         private String Wash;
         private String Factory;
         private String ValidTime;
         private String ProductionDate;
         private String PruchaseDate;
         private String Material;
-        private String Origin;
         private String Size;
 
-        public String getId() {
-            return id;
+        private String Memo1;
+        private String Memo2;
+        private String Memo3;
+        private String Memo4;
+        private String Memo5;
+        private String Memo6;
+        private String Memo7;
+        private String Memo8;
+
+
+        private String boxRFID;
+        private String boxName;
+
+        public String getI_id() {
+            return i_id;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setI_id(String i_id) {
+            this.i_id = i_id;
         }
 
         public String getRFID() {
@@ -88,6 +97,14 @@ public class SetInfo implements Serializable {
 
         public void setCode_P(String code_P) {
             Code_P = code_P;
+        }
+
+        public String getImgPath() {
+            return ImgPath;
+        }
+
+        public void setImgPath(String imgPath) {
+            ImgPath = imgPath;
         }
 
         public String getImg() {
@@ -128,30 +145,6 @@ public class SetInfo implements Serializable {
 
         public void setStock(String stock) {
             Stock = stock;
-        }
-
-        public String getCheckOut() {
-            return CheckOut;
-        }
-
-        public void setCheckOut(String checkOut) {
-            CheckOut = checkOut;
-        }
-
-        public String getSterilization() {
-            return Sterilization;
-        }
-
-        public void setSterilization(String sterilization) {
-            Sterilization = sterilization;
-        }
-
-        public String getPackage() {
-            return Package;
-        }
-
-        public void setPackage(String aPackage) {
-            Package = aPackage;
         }
 
         public String getWash() {
@@ -202,14 +195,6 @@ public class SetInfo implements Serializable {
             Material = material;
         }
 
-        public String getOrigin() {
-            return Origin;
-        }
-
-        public void setOrigin(String origin) {
-            Origin = origin;
-        }
-
         public String getSize() {
             return Size;
         }
@@ -218,30 +203,117 @@ public class SetInfo implements Serializable {
             Size = size;
         }
 
+        public String getMemo1() {
+            return Memo1;
+        }
+
+        public void setMemo1(String memo1) {
+            Memo1 = memo1;
+        }
+
+        public String getMemo2() {
+            return Memo2;
+        }
+
+        public void setMemo2(String memo2) {
+            Memo2 = memo2;
+        }
+
+        public String getMemo3() {
+            return Memo3;
+        }
+
+        public void setMemo3(String memo3) {
+            Memo3 = memo3;
+        }
+
+        public String getMemo4() {
+            return Memo4;
+        }
+
+        public void setMemo4(String memo4) {
+            Memo4 = memo4;
+        }
+
+        public String getMemo5() {
+            return Memo5;
+        }
+
+        public void setMemo5(String memo5) {
+            Memo5 = memo5;
+        }
+
+        public String getMemo6() {
+            return Memo6;
+        }
+
+        public void setMemo6(String memo6) {
+            Memo6 = memo6;
+        }
+
+        public String getMemo7() {
+            return Memo7;
+        }
+
+        public void setMemo7(String memo7) {
+            Memo7 = memo7;
+        }
+
+        public String getMemo8() {
+            return Memo8;
+        }
+
+        public void setMemo8(String memo8) {
+            Memo8 = memo8;
+        }
+
+        public String getBoxRFID() {
+            return boxRFID;
+        }
+
+        public void setBoxRFID(String boxRFID) {
+            this.boxRFID = boxRFID;
+        }
+
+        public String getBoxName() {
+            return boxName;
+        }
+
+        public void setBoxName(String boxName) {
+            this.boxName = boxName;
+        }
+
         @Override
         public String toString() {
             return "RFIDInfoEx{" +
-                    "id='" + id + '\'' +
+                    "i_id='" + i_id + '\'' +
                     ", RFID='" + RFID + '\'' +
                     ", Code='" + Code + '\'' +
                     ", Sort='" + Sort + '\'' +
                     ", Code_P='" + Code_P + '\'' +
+                    ", ImgPath='" + ImgPath + '\'' +
                     ", Img='" + Img + '\'' +
                     ", Count='" + Count + '\'' +
                     ", CheckIn='" + CheckIn + '\'' +
                     ", OutStock='" + OutStock + '\'' +
                     ", Stock='" + Stock + '\'' +
-                    ", CheckOut='" + CheckOut + '\'' +
-                    ", Sterilization='" + Sterilization + '\'' +
-                    ", Package='" + Package + '\'' +
                     ", Wash='" + Wash + '\'' +
                     ", Factory='" + Factory + '\'' +
                     ", ValidTime='" + ValidTime + '\'' +
                     ", ProductionDate='" + ProductionDate + '\'' +
                     ", PruchaseDate='" + PruchaseDate + '\'' +
                     ", Material='" + Material + '\'' +
-                    ", Origin='" + Origin + '\'' +
                     ", Size='" + Size + '\'' +
+                    ", Memo1='" + Memo1 + '\'' +
+                    ", Memo2='" + Memo2 + '\'' +
+                    ", Memo3='" + Memo3 + '\'' +
+                    ", Memo4='" + Memo4 + '\'' +
+                    ", Memo5='" + Memo5 + '\'' +
+                    ", Memo6='" + Memo6 + '\'' +
+                    ", Memo7='" + Memo7 + '\'' +
+                    ", Memo8='" + Memo8 + '\'' +
+                    ", boxRFID='" + boxRFID + '\'' +
+                    ", boxName='" + boxName + '\'' +
                     '}';
         }
     }

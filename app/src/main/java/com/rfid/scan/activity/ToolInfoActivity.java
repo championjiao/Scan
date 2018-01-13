@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.rfid.scan.MyU8Series;
 import com.rfid.scan.R;
 import com.rfid.scan.adapter.SeriesAdapter;
@@ -33,10 +36,13 @@ import com.rfid.scan.series.reader.model.InventoryBuffer;
 import com.rfid.scan.series.reader.server.ReaderHelper;
 import com.rfid.scan.service.BoxDataUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.rfid.scan.R.id.lsvMore;
 import static com.rfid.scan.UHFApplication.OP_Type_Change;
@@ -55,6 +61,7 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
     private List<instruValue> mList = new ArrayList<instruValue>();
     private List<instruValue> mList1 = new ArrayList<instruValue>();
     private List<instruValue> mList2 = new ArrayList<instruValue>();
+    private Set<String> mScanList = new HashSet<String>();
     private TextView mTextTab1;
     private TextView mTextTab2;
     private InstruAdapter mInstruAdapter;
@@ -82,7 +89,6 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.str_toolInfo);
 
         InitView();
 
@@ -91,14 +97,43 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
         if(opType.equalsIgnoreCase(OP_Type_Change)){//替换 一个现有的rfid
             mFlag = 3;
             mStrRfid = bundle.getString("toolRfid");
+            actionBar.setTitle(R.string.str_toolInfo_replace);
+            initData(mStrRfid);
+            mBnChange.setVisibility(View.GONE);
         }else if(opType.equalsIgnoreCase(OP_Type_Search)){//查找  根据rfid找到对应的设备
             mFlag = 1;
             mStrRfid = bundle.getString("toolRfid");
+            actionBar.setTitle(R.string.str_toolInfo_search);
+            initData(mStrRfid);
+            mBnChange.setVisibility(View.GONE);
         }else if(opType.equalsIgnoreCase(OP_Type_Recognize)){//识别 识别所有的设备，只有和工具包里的匹配就算
             mFlag=2;
+            actionBar.setTitle(R.string.str_toolInfo_recognize);
+            mBnChange.setVisibility(View.GONE);
+            mScanList.clear();
         }
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case 4:
+                this.finish();
+                break;
+            case 80://扫描按键
+                String buttonText  = mBnStart.getText().toString();
+                if(buttonText.equalsIgnoreCase("开始")){
+                    mBnStart.setText("停止");
+                    startInventory();
+                }else{
+                    mBnStart.setText("开始");
+                    stopInventory();
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -132,11 +167,10 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
                 String buttonText2  = mBnChange.getText().toString();
                 if(buttonText2.equalsIgnoreCase("替换")){
                     mBnChange.setText("暂停");
-                    pop(getWindow().getDecorView().findViewById(R.id.bt_change),
-                            "1212",
-                            "1212",
-                            "121222222");
-
+//                    popWin(getWindow().getDecorView().findViewById(R.id.bt_change),
+//                            "1212",
+//                            "1212",
+//                            "121222222");
                     //startInventory();
                 }else{
                     mBnChange.setText("替换");
@@ -168,31 +202,38 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
                     //取到数据
                     List<InventoryBuffer.InventoryTagMap> inventoryTagData = new ArrayList<InventoryBuffer.InventoryTagMap>();
                     inventoryTagData.addAll((Collection<? extends InventoryBuffer.InventoryTagMap>) data);
-
                     for(InventoryBuffer.InventoryTagMap map:inventoryTagData){
                         if(mFlag == 1){//查找  找到就暂停
-                            if(mStrRfid.equalsIgnoreCase(map.strEPC)){
+                            String strEPC = map.strEPC.replace(" ","");
+                            if(mStrRfid.equalsIgnoreCase(strEPC)){
                                 stopInventory();
                                 mBnStart.setText("开始");
-                                initData(mStrRfid);
+                                Toast.makeText(mContext, "已找到设备！", Toast.LENGTH_SHORT).show();
                                 break;
                             }
                         }else if(mFlag == 2) {//识别 找到后 弹框确认是否找到
-                            SetInfo.RFIDInfoEx rfidInfoEx = BoxDataUtil.getInstance().getmRfidMap().get(map.strEPC);
-                            if(rfidInfoEx != null){
-                                //initData(map.strEPC);
-                                pop(getWindow().getDecorView().findViewById(R.id.bt_change),
-                                        rfidInfoEx.getCode(),
-                                        rfidInfoEx.getCode_P(),
-                                        rfidInfoEx.getImg());
+                            String strEPC = map.strEPC.replace(" ","");
+                            if(!mScanList.contains(strEPC)){//已经扫描到的就过滤掉
+                                mScanList.add(strEPC);
+                                SetInfo.RFIDInfoEx rfidInfoEx = BoxDataUtil.getInstance().getmRfidMap().get(strEPC);
+                                if(rfidInfoEx != null){//识别到就暂停
+                                    stopInventory();
+                                    mBnStart.setText("开始");
+                                    initData(strEPC);
+                                    break;
+                                }
                             }
                         }else if(mFlag == 3){ //替换  弹框确认是否要替换
-                            SetInfo.RFIDInfoEx rfidInfoEx = BoxDataUtil.getInstance().getmRfidMap().get(map.strEPC);
-                            if(rfidInfoEx != null){
-                                pop(getWindow().getDecorView().findViewById(R.id.bt_change),
-                                        rfidInfoEx.getCode(),
-                                        rfidInfoEx.getCode_P(),
-                                        rfidInfoEx.getImg());
+                            String strEPC = map.strEPC.replace(" ","");
+                            SetInfo.RFIDInfoEx rfidInfoEx = BoxDataUtil.getInstance().getmRfidMap().get(strEPC);
+                            if(rfidInfoEx != null){//说明没有在设备列表
+                                stopInventory();
+                                mBnStart.setText("开始");
+                                popWin(getWindow().getDecorView().findViewById(R.id.bt_change),
+                                        mRfidInfo.getCode(),
+                                        mRfidInfo.getCode_P(),
+                                        mRfidInfo.getImg(),mStrRfid,strEPC);
+                                break;
                             }
                         }
                     }
@@ -239,8 +280,15 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
     void initData(String toolRfid){
         //读取工具包数据
         mRfidInfo= (SetInfo.RFIDInfoEx) BoxDataUtil.getInstance().getmRfidMap().get(toolRfid);
+        mTextBoxName.setText(mRfidInfo.getBoxName());
         //工具图片
-        mImgPic.setImageResource(R.drawable.ic_home_black_24dp);
+        String filePath = BoxDataUtil.getInstance().getDiskDir()+mRfidInfo.getImg();
+        File file = new File(filePath);
+        Glide.with(mContext).
+                load(file).
+                asBitmap().
+                diskCacheStrategy(DiskCacheStrategy.RESULT).//保存最终图片
+                into(mImgPic);
         //rfid
         mTextCode.setText(mRfidInfo.getCode());
         mTextCodeP.setText(mRfidInfo.getCode_P());
@@ -250,15 +298,11 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
         mList1.add(new instruValue("Production date:",mRfidInfo.getProductionDate()));
         mList1.add(new instruValue("Purchase date:",mRfidInfo.getPruchaseDate()));
         mList1.add(new instruValue("Material:",mRfidInfo.getMaterial()));
-        mList1.add(new instruValue("Origin:",mRfidInfo.getOrigin()));
         mList1.add(new instruValue("Size:",mRfidInfo.getSize()));
 
         mList2.add(new instruValue("Check In:",mRfidInfo.getCheckIn()));
-        mList2.add(new instruValue("Check Out:",mRfidInfo.getCheckOut()));
         mList2.add(new instruValue("Stock:",mRfidInfo.getStock()));
         mList2.add(new instruValue("Stock Out:",mRfidInfo.getOutStock()));
-        mList2.add(new instruValue("Sterilization:",mRfidInfo.getSterilization()));
-        mList2.add(new instruValue("Package:",mRfidInfo.getPackage()));
         mList2.add(new instruValue("Wash:",mRfidInfo.getWash()));
 
         mTextTab1.setBackgroundResource(R.drawable.textview_selector);
@@ -405,7 +449,7 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void pop(View v,String code,String codeP,String img){
+    private void popWin(View v,String code,String codeP,String img,final String oldEPC,final String newEPC){
         View popupView = ToolInfoActivity.this.getLayoutInflater().inflate(R.layout.confirm_window, null);
 
         TextView textCode = (TextView)popupView.findViewById(R.id.text_code);
@@ -415,9 +459,15 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
 
         textCode.setText(code);
         textCodeP.setText(codeP);
-        imgPic.setImageResource(R.drawable.ic_home_black_24dp);
+        String filePath = BoxDataUtil.getInstance().getDiskDir()+img;
+        File file = new File(filePath);
+        Glide.with(mContext).
+                load(file).
+                asBitmap().
+                diskCacheStrategy(DiskCacheStrategy.RESULT).//保存最终图片
+                into(imgPic);
 
-        PopupWindow window = new PopupWindow(popupView, 280, 400);
+        final PopupWindow window = new PopupWindow(popupView, 280, 400);
         window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
         window.setFocusable(true);
         window.setOutsideTouchable(true);
@@ -427,7 +477,9 @@ public class ToolInfoActivity extends AppCompatActivity implements View.OnClickL
         bnOk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                //更换rfid
+                BoxDataUtil.getInstance().changeRfidData(oldEPC,newEPC);
+                window.dismiss();
             }
         });
     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,7 @@ import com.rfid.scan.MyU8Series;
 import com.rfid.scan.R;
 import com.rfid.scan.adapter.SeriesAdapter;
 import com.rfid.scan.adapter.ToolsAdapter;
+import com.rfid.scan.adapter.rfidAdapter;
 import com.rfid.scan.entity.BoxData;
 import com.rfid.scan.entity.SetInfo;
 import com.rfid.scan.series.model.ResponseHandler;
@@ -31,6 +33,8 @@ import com.rfid.scan.series.reader.model.InventoryBuffer;
 import com.rfid.scan.series.reader.server.ReaderHelper;
 import com.rfid.scan.service.BoxDataUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -38,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.rfid.scan.UHFApplication.OP_Type_Change;
 import static com.rfid.scan.UHFApplication.OP_Type_Recognize;
 
 public class SeriesActivity extends AppCompatActivity implements View.OnClickListener{
@@ -53,6 +58,7 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
     private Map<String,SeriesAdapter.setInfoEx> mList = new HashMap<String,SeriesAdapter.setInfoEx>();
     private BoxData mBoxData;
     private String  mBoxDesp;
+    private int mTotal;
 
     private Handler mHandler;
     private static Context mContext;
@@ -100,9 +106,12 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
         //读取工具包数据
         mBoxData= (BoxData) BoxDataUtil.getInstance().getmBoxMap().get(boxRfid);
         mTextBoxName.setText(mBoxDesp);
+        mTotal = mBoxData.getSetInfo().getInstruments().size();
+        SimpleDateFormat CurrentTime= new SimpleDateFormat("yyyy-MM-dd");
         //数据需要处理一下
-        //找到code一样的
+        //找到code一样的 重新组织数据结构
         for(SetInfo.RFIDInfoEx infoEx:mBoxData.getSetInfo().getInstruments()){
+            mRfidMap.put(infoEx.getRFID(),infoEx);
             String code = infoEx.getCode();
             SeriesAdapter.setInfoEx setinfo = mList.get(code);
             if(setinfo != null){
@@ -110,17 +119,31 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
             }
             else{
                 setinfo = new SeriesAdapter.setInfoEx();
+                setinfo.setValidate(true);
                 setinfo.setCode(code);
                 setinfo.getRfids().add(infoEx.getRFID());
                 setinfo.setImgPath(infoEx.getImg());
-                mList.put(code,setinfo);
             }
+            //有效期计算
+            try {
+                Date validTime=CurrentTime.parse(infoEx.getValidTime());
+                Date nowTime= new Date();
+                if(((validTime.getTime() - nowTime.getTime())/(24*60*60*1000))<=0) {
+                    setinfo.setValidate(false);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            mList.put(code,setinfo);
         }
         seriesAdapter = new SeriesAdapter(this,mList);
         mGridView.setAdapter(seriesAdapter);
         stringTxtRealInventoryCount = this.getString(R.string.inventoryCountText);
         mTextTipStatus.setText(String.format(stringTxtRealInventoryCount, 0, 0, 0, 0));
         mHandler = new Handler();
+        mTextToatl.setText(String.valueOf(mTotal));
     }
 
     @Override
@@ -190,17 +213,22 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
                     //取到数据
                     List<InventoryBuffer.InventoryTagMap> inventoryTagData = new ArrayList<InventoryBuffer.InventoryTagMap>();
                     inventoryTagData.addAll((Collection<? extends InventoryBuffer.InventoryTagMap>) data);
-
+                    int count =0;
                     synchronized (SeriesActivity.class){
                         for(InventoryBuffer.InventoryTagMap map:inventoryTagData){
-                            SeriesAdapter.setInfoEx setinfo = mList.get(map.strCRC);
-                            if(setinfo != null){
-                                setinfo.getCorrentRfids().add(map.strEPC);
+                            String strEPC = map.strEPC.replace(" ","");
+                            SetInfo.RFIDInfoEx rfidInfoEx = mRfidMap.get(strEPC);
+                            if(rfidInfoEx != null){
+                                SeriesAdapter.setInfoEx setinfo = mList.get(rfidInfoEx.getCode());
+                                if(setinfo != null){
+                                    setinfo.getCorrentRfids().add(map.strEPC);
+                                    count++;
+                                }
                             }
                         }
                     }
+                    mTextMissing.setText(String.valueOf(mTotal - count));
                     seriesAdapter.notifyDataSetChanged();
-
                 } else {
                     System.out.println("盘询成功,返回标识异常");
                 }
@@ -248,12 +276,27 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case 4:
+                this.finish();
+                break;
+            case 80://扫描按键
+                reset();//这里只需要重新扫描即可
+                break;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     private void popWin(View v,final List<String> list){
         View popupView = SeriesActivity.this.getLayoutInflater().inflate(R.layout.popwindows, null);
         ListView lsvMore = (ListView) popupView.findViewById(R.id.lsvMore);
-        lsvMore.setAdapter(new ArrayAdapter<String>(SeriesActivity.this, android.R.layout.simple_list_item_1, list));
+        lsvMore.setAdapter(new rfidAdapter(SeriesActivity.this,list));
 
-        PopupWindow window = new PopupWindow(popupView, 300, 400);
+        final PopupWindow window = new PopupWindow(popupView, 300, 400);
         window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
         window.setFocusable(true);
         window.setOutsideTouchable(true);
@@ -267,13 +310,14 @@ public class SeriesActivity extends AppCompatActivity implements View.OnClickLis
                 //跳转到详情页
                 Intent intent=new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("toolRfid",toolRfid);
-                bundle.putSerializable("boxDesp",mBoxDesp);
+                bundle.putString("toolRfid",toolRfid);
+                bundle.putString("boxDesp",mBoxDesp);
                 //在这里到详情页 只有替换
-                bundle.putString("opType",OP_Type_Recognize);
+                bundle.putString("opType",OP_Type_Change);
                 intent.putExtras(bundle);
                 intent.setClass(SeriesActivity.this, ToolInfoActivity.class);
                 startActivity(intent);
+                window.dismiss();
             }
         });
     }

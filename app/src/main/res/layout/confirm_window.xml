@@ -84,7 +84,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:textAllCaps="false"
-        android:text="Confirm"
+        android:text="@string/action_replace"
         android:textColor="@color/colorwhite"
         android:background="@drawable/button_ok_boder"/>
 

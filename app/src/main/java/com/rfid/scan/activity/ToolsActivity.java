@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.rfid.scan.R;
 import com.rfid.scan.adapter.SeriesAdapter;
 import com.rfid.scan.adapter.ToolsAdapter;
+import com.rfid.scan.adapter.rfidAdapter;
 import com.rfid.scan.entity.BoxData;
 import com.rfid.scan.entity.SetInfo;
 import com.rfid.scan.service.BoxDataUtil;
@@ -117,9 +118,9 @@ public class ToolsActivity extends AppCompatActivity {
     private void pop(View v,final List<String> list){
         View popupView = ToolsActivity.this.getLayoutInflater().inflate(R.layout.popwindows, null);
         ListView lsvMore = (ListView) popupView.findViewById(R.id.lsvMore);
-        lsvMore.setAdapter(new ArrayAdapter<String>(ToolsActivity.this, android.R.layout.simple_list_item_1, list));
+        lsvMore.setAdapter(new rfidAdapter(ToolsActivity.this, list));
 
-        PopupWindow window = new PopupWindow(popupView, 300, 400);
+        final PopupWindow window = new PopupWindow(popupView, 300, 400);
         window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
         window.setFocusable(true);
         window.setOutsideTouchable(true);
@@ -133,12 +134,13 @@ public class ToolsActivity extends AppCompatActivity {
                 //跳转到详情页
                 Intent intent=new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("toolRfid",toolRfid);
-                bundle.putSerializable("boxDesp",mBoxDesp);
+                bundle.putString("toolRfid",toolRfid);
+                bundle.putString("boxDesp",mBoxDesp);
                 bundle.putString("opType",mFlag);
                 intent.putExtras(bundle);
                 intent.setClass(ToolsActivity.this, ToolInfoActivity.class);
                 startActivity(intent);
+                window.dismiss();
             }
         });
     }
